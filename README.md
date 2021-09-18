@@ -3,8 +3,8 @@
 ###
 - 🍻 Graduated from  🇨🇳 [ZZU](http://www.zzu.edu.cn/), _BSc in Computer Science
 -  iOS Developer/iOS Developer
-- ⚡ C /object-c/swift/react/vue.
-- - ✍️ [Blogger](dahangda.github.io)
+⚡ C /object-c/swift/react/vue.
+- ✍️ [Blogger](dahangda.github.io)
 <!--
 **dahangda/dahangda** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
