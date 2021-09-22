@@ -1,4 +1,4 @@
-### Yoo, I'm Hang Yan 👋
+## Yoo, I'm Hang Yan 👋
 
 [<img align="right" width="50%" src="https://github-readme-stats.vercel.app/api?username=dahangda">]()
 
@@ -7,9 +7,7 @@
 -   iOS Developer/web Developer
 - ⚡  C /object-c/swift/react/vue.
 -  ✍️  [Blogger](dahangda.github.io)
-
-### 💻 I work using:
-  ![Git](https://img.shields.io/badge/-Git-black?style=plastic&logo=git)
+-  ![Git](https://img.shields.io/badge/-Git-black?style=plastic&logo=git)
   ![Shell](https://img.shields.io/badge/-Shell-blasck?style=plastic&logo=Shell)
   ![VS Code](https://img.shields.io/badge/-VS%20Code-007ACC?style=plastic&logo=visual-studio-code)
  
