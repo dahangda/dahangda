@@ -8,7 +8,7 @@
 - 🛠  iOS Developer/web Developer
 - 💻  C /object-c/swift/react/vue.
 - ✍️  notion/flomo/Typora
-- 🚀 I use daily: VS Code,Git
+- 🚀 I use daily: VS Code,Xcode
 
 <img src="https://visitor-badge.glitch.me/badge?page_id=dahangda" />
 
