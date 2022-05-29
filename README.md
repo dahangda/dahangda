@@ -1,7 +1,6 @@
 ## Yoo, I'm Hang Yan 👋
 
-[<img align="right" width="50%" heigh="100%" src="https://github-readme-stats.vercel.app/api?username=dahangda&show_icons=true&include_all_commits=true&theme=buefy&hide_border=true">](https://github.com/dahangda)
-
+[<img align="right" width="50%" heigh="100%" src="https://github-readme-stats.vercel.app/api?username=dahangda&count_private=true&show_icons=true&include_all_commits=true&theme=buefy&hide_border=true">](https://github.com/dahangda)
 
 ### Personal information
 - 🍻  Graduated from  🇨🇳 [ZZU](http://www.zzu.edu.cn/), _BSc in Computer Science
