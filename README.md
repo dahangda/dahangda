@@ -6,11 +6,8 @@
 - 🍻  Graduated from  🇨🇳 [ZZU](http://www.zzu.edu.cn/), _BSc in Computer Science
 - 🛠  iOS Developer/web Developer
 - 💻  C /object-c/swift/react/vue.
-- ✍️  [Blogger](https://www.dahangda.top)
-- 🚀 I use daily:
-  ![Git](https://img.shields.io/badge/-Git-black?style=plastic&logo=git)
-  ![Shell](https://img.shields.io/badge/-Shell-blasck?style=plastic&logo=Shell)
-  ![VS Code](https://img.shields.io/badge/-VS%20Code-007ACC?style=plastic&logo=visual-studio-code)
+- ✍️  notion/flomo/Typora
+- 🚀 I use daily: VS Code,Git
 
 <img src="https://visitor-badge.glitch.me/badge?page_id=dahangda" />
 
@@ -18,6 +15,9 @@
 **dahangda/dahangda** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
 Here are some ideas to get you started:
+ ![Git](https://img.shields.io/badge/-Git-black?style=plastic&logo=git)
+ ![Shell](https://img.shields.io/badge/-Shell-blasck?style=plastic&logo=Shell)
+ ![VS Code](https://img.shields.io/badge/-VS%20Code-007ACC?style=plastic&logo=visual-studio-code)
 
 - 🔭 I’m currently working on ...
 - 🌱 I’m currently learning ...
