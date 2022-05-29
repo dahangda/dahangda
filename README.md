@@ -1,7 +1,6 @@
 ## Yoo, I'm Hang Yan 👋
 
 [<img align="right" width="50%" heigh="100%" src="https://github-readme-stats.vercel.app/api?username=dahangda&count_private=true&show_icons=true&include_all_commits=true&theme=buefy&hide_border=true">](https://github.com/dahangda)
-
 ### Personal information
 - 🍻  Graduated from  🇨🇳 [ZZU](http://www.zzu.edu.cn/), _BSc in Computer Science
 - 🛠  iOS Developer/web Developer
@@ -12,8 +11,6 @@
 <img src="https://visitor-badge.glitch.me/badge?page_id=dahangda" />
 
 <!--
-**dahangda/dahangda** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
-
 Here are some ideas to get you started:
  ![Git](https://img.shields.io/badge/-Git-black?style=plastic&logo=git)
  ![Shell](https://img.shields.io/badge/-Shell-blasck?style=plastic&logo=Shell)
