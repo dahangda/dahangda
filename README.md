@@ -12,6 +12,7 @@
   ![Shell](https://img.shields.io/badge/-Shell-blasck?style=plastic&logo=Shell)
   ![VS Code](https://img.shields.io/badge/-VS%20Code-007ACC?style=plastic&logo=visual-studio-code)
 
+<img src="https://visitor-badge.glitch.me/badge?page_id=dahangda" />
 
 <!--
 **dahangda/dahangda** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
