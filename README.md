@@ -3,7 +3,7 @@
 [<img align="right" width="50%" heigh="100%" src="https://github-readme-stats.vercel.app/api?username=dahangda&count_private=true&show_icons=true&include_all_commits=true">](https://github.com/dahangda)
 - 🍻  Graduated from  🇨🇳 [ZZU](http://www.zzu.edu.cn/), _BSc in Computer Science
 - 🛠  iOS Developer/web Developer
-- 💻  C /object-c/swift/react/vue.
+- 💻  object-c/swift/react/vue.
 - ✍️  notion/flomo/Typora
 - 🚀 I use daily: VS Code,Xcode
 
