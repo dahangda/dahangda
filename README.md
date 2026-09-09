@@ -1,13 +1,13 @@
 ## Yoo, I'm Hang Yan 👋
 
-[<img align="right" width="50%" heigh="100%" src="https://github-readme-stats.vercel.app/api?username=dahangda&count_private=true&show_icons=true&include_all_commits=true">](https://github.com/dahangda)
+[<img align="right" width="50%" alt="Hang Yan's GitHub stats" src="https://github-stats-extended.vercel.app/api?username=dahangda&show_icons=true&theme=transparent">](https://github.com/dahangda)
 - 🍻  Graduated from  🇨🇳 [ZZU](http://www.zzu.edu.cn/), _BSc in Computer Science
 - 🛠  iOS Developer/web Developer
 - 💻  object-c/swift/react/vue.
 - ✍️  notion/flomo/Typora
 - 🚀 I use daily: VS Code,Xcode
 
-<img src="https://visitor-badge.glitch.me/badge?page_id=dahangda" />
+<img alt="Profile views" src="https://komarev.com/ghpvc/?username=dahangda&style=flat-square" />
 
 <!--
 Here are some ideas to get you started:
