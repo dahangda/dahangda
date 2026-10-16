@@ -9,14 +9,15 @@ iOS 开发者 · 郑州大学计算机科学学士
 
 ## Focus
 
-- **iOS 业务与组件化**：登录、订阅权益、端云同步与异步状态管理。
-- **Hybrid 与语音**：H5 桥接、ASR / TTS、多端布局及多语言适配。
-- **稳定性与质量**：崩溃和网络诊断、自动化测试、性能基线与数据分析。
+- **iOS 开发**：组件化、登录订阅、端云同步与语音交互。
+- **鸿蒙与 Hybrid**：ArkTS、Web 容器、原生桥接与系统事件接入。
+- **Web 业务**：React / Vue 管理后台、移动 H5 与数据可视化，涉及金融、缴费和教育场景。
+- **稳定性与交付**：崩溃和网络诊断、自动化测试与工程自动化。
 
 ## Tech & tools
 
-- **客户端**：Swift / Objective-C · UIKit · Combine · StoreKit 2
-- **Web / 后端**：TypeScript · Vue / React · Node.js · Cloudflare · SQLite
+- **客户端**：Swift / Objective-C · UIKit · Combine · StoreKit 2 · HarmonyOS / ArkTS
+- **Web / 后端**：TypeScript · React / Umi · Vue / ECharts · Node.js · Cloudflare · SQLite
 - **质量 / 交付**：Firebase · BigQuery · Swift Testing / XCUITest · fastlane · GitHub Actions
 - **日常工具**：Xcode · VS Code · Codex / Claude Code · MCP / Skills · Figma · 飞书
 
