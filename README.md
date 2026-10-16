@@ -29,7 +29,7 @@ iOS 开发者 · 郑州大学计算机科学学士
 ## GitHub activity
 
 <!-- PROFILE-STATS:START -->
-[![Hang Yan's GitHub activity](https://github-stats-extended.vercel.app/api?username=dahangda&show_icons=true&theme=transparent&include_all_commits=true&hide_rank=true&hide=stars,issues,prs,contribs&show=contributions&number_format=long&custom_title=GitHub%20Activity)](https://github.com/dahangda)
+[![Hang Yan's GitHub activity](./profile/stats.svg)](https://github.com/dahangda)
 
-<sub>公开仓库数包含 Fork；Commits 展示统计服务可读取的历史提交数，Contributions 为历史贡献次数，两者口径不同。数据由第三方服务更新，受访问权限与缓存影响。</sub>
+<sub>公开仓库数包含 Fork；Commits 为当前授权范围内、GitHub 可检索到的历史提交数，包含可访问的私有仓库。Contributions 为历史贡献次数，与 commit 数口径不同。由 GitHub Actions 每日更新；权限、分支与索引状态可能影响统计范围。</sub>
 <!-- PROFILE-STATS:END -->
