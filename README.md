@@ -31,6 +31,8 @@ iOS & Web Developer · Swift / Objective-C / React / Vue
 
 ## GitHub activity
 
+<!-- PROFILE-STATS:START -->
 [![Hang Yan's GitHub activity](https://github-stats-extended.vercel.app/api?username=dahangda&show_icons=true&theme=transparent&include_all_commits=true&hide_rank=true&hide=stars,issues,prs,contribs&show=contributions&number_format=long&custom_title=GitHub%20Activity)](https://github.com/dahangda)
 
 <sub>公开仓库数包含 Fork；Commits 展示统计服务可读取的历史提交数，Contributions 为历史贡献次数，两者口径不同。数据由第三方服务更新，受访问权限与缓存影响。</sub>
+<!-- PROFILE-STATS:END -->
