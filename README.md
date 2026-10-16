@@ -1,19 +1,38 @@
 # Hi, I'm Hang Yan 👋
 
-iOS & Web Developer · Swift / Objective-C / React / Vue
+iOS Developer · Full-stack Projects · AI-assisted Development
 
-关注 iOS 应用开发、原生与 Web 交互，以及日常开发效率工具。
+以 iOS 为核心，实践 Web 与后端开发；关注语音交互、应用稳定性，以及 AI 辅助的工程效率。
 
 [![Public repositories](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Fusers%2Fdahangda&query=%24.public_repos&label=Public%20repos&color=0969da&style=flat-square)](https://github.com/dahangda?tab=repositories)
 [![GitHub since 2015](https://img.shields.io/badge/GitHub-since%202015-181717?style=flat-square&logo=github)](https://github.com/dahangda)
-[![Blog](https://img.shields.io/badge/Blog-dahangda.top-0f766e?style=flat-square)](https://www.dahangda.top/)
+[![Blog](https://img.shields.io/badge/Blog-Hugo-0f766e?style=flat-square&logo=hugo)](https://hugo-blog-bsg.pages.dev/)
 
 ## About me
 
 - 🎓 郑州大学 · 计算机科学学士
-- 📱 iOS：Swift、Objective-C、UIKit
-- 🌐 Web：React、Vue，以及 JavaScript 与原生应用的桥接
-- 🛠 日常工具：Xcode、VS Code；使用 Notion、flomo、Typora 记录与整理
+- 📱 以 iOS 开发为主，关注应用架构、订阅支付、多语言适配与性能稳定性
+- 🎙️ 持续实践语音识别、语音合成及音频会话管理，改善 AI 对话体验
+- 🛠️ 开发配套 Web 工具与轻量后端，用数据分析和自动化支持产品迭代
+
+## Tech stack
+
+| 方向 | 技术与实践 |
+| --- | --- |
+| iOS | Swift、Objective-C、UIKit、Combine、Swift Concurrency、StoreKit 2、Swift Package Manager |
+| 语音与音频 | AVFoundation、ASR / TTS 集成、音频会话与播放状态管理 |
+| Web | TypeScript、JavaScript、Vue 3、Vite、Pinia；也有 React 与原生 / Web 桥接实践 |
+| 后端与数据 | Node.js、Fastify、Prisma、SQLite、Cloudflare Workers / D1 / Pages |
+| 质量与分析 | Firebase Crashlytics / Performance / Remote Config、GA4、BigQuery SQL、PostHog、网络诊断与性能分析 |
+| 工程与交付 | Git、GitHub Actions、fastlane、Swift Testing、XCUITest |
+
+## Tools & workflow
+
+- **开发与调试**：Xcode、VS Code
+- **AI 辅助开发**：Codex、Claude Code，结合 MCP、Skills 与 OpenSpec 组织开发流程
+- **设计与协作**：Figma、飞书文档 / 多维表格、lark-cli
+- **记录与写作**：Notion、flomo、Typora、Hugo
+- **日常自动化**：构建与发布、应用健康日报、数据查询与定时任务
 
 ## Selected projects
 
