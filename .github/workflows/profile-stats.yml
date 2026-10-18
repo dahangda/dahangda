@@ -47,7 +47,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git add -- README.md
+          git add -- README.md profile/commits-light.svg profile/commits-dark.svg
           if git diff --cached --quiet; then
             echo 'Statistics unchanged.'
             exit 0

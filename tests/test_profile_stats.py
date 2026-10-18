@@ -2,12 +2,13 @@ import json
 import subprocess
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from unittest.mock import patch
 
 from scripts.profile_stats import (
     END, START, HISTORICAL_AUTHOR_EMAILS, GitHub, HTTPError, StatsError,
-    collect, collect_repository, replace_stats, update,
+    collect, collect_repository, render_card, replace_stats, update,
 )
 
 
@@ -161,7 +162,7 @@ class CollectionTests(unittest.TestCase):
         self.assertEqual(result["commits"], 3)
         self.assertEqual(result["unavailable_repositories"], 1)
         text = replace_stats(START + END, result["commits"])
-        self.assertEqual(text, START + "\n**GitHub 全分支提交 · 3 次**\n" + END)
+        self.assertIn('alt="GitHub 全分支提交 · 3 次"', text)
         for status in (403, 404, 409, 429, 500):
             api = fixture()
             api.data[("repos/org/private/commits", sha(12))] = HTTPError(status)
@@ -182,19 +183,69 @@ class CollectionTests(unittest.TestCase):
             readme.write_text(original)
             update(fixture(), "dahangda", readme, dry_run=True)
             self.assertEqual(readme.read_text(), original)
+            self.assertFalse((readme.parent / "profile").exists())
             update(fixture(), "dahangda", readme)
             published = readme.read_text()
             self.assertIn("全分支提交 · 4 次", published)
             self.assertTrue(published.startswith(f"profile\n{START}"))
             self.assertTrue(published.endswith(f"{END}\nfooter"))
             self.assertNotIn("org/private", published)
+            cards = [readme.parent / "profile" / f"commits-{theme}.svg"
+                     for theme in ("light", "dark")]
+            snapshots = [(card.read_text(), card.stat().st_mtime_ns) for card in cards]
+            for svg, _ in snapshots:
+                self.assertIn("全分支提交：4 次", svg)
             update(fixture(), "dahangda", readme)
             self.assertEqual(readme.read_text(), published)
+            self.assertEqual([(card.read_text(), card.stat().st_mtime_ns) for card in cards], snapshots)
+
+    def test_changed_count_updates_both_cards_and_readme(self):
+        with tempfile.TemporaryDirectory() as directory:
+            readme = Path(directory) / "README.md"
+            readme.write_text(START + END)
+            update(fixture(), "dahangda", readme)
+            api = fixture()
+            api.data[("repos/org/private/commits", sha(12))].append(commit(5))
+            update(api, "dahangda", readme)
+            self.assertIn('alt="GitHub 全分支提交 · 5 次"', readme.read_text())
+            for theme in ("light", "dark"):
+                svg = (readme.parent / "profile" / f"commits-{theme}.svg").read_text()
+                self.assertIn("全分支提交：5 次", svg)
+                self.assertIn(f"commits-{theme}.svg?v=5", readme.read_text())
+
+    def test_scan_failure_preserves_existing_cards(self):
+        with tempfile.TemporaryDirectory() as directory:
+            readme = Path(directory) / "README.md"
+            readme.write_text(START + END)
+            update(fixture(), "dahangda", readme)
+            paths = [readme, *sorted((readme.parent / "profile").glob("*.svg"))]
+            before = [path.read_bytes() for path in paths]
+            api = fixture()
+            api.data[("repos/org/private/commits", sha(12))] = HTTPError(403)
+            with self.assertRaises(StatsError):
+                update(api, "dahangda", readme)
+            self.assertEqual([path.read_bytes() for path in paths], before)
 
     def test_invalid_markers_rejected(self):
         for content in ("no markers", END + START, START + START + END):
             with self.assertRaises(StatsError):
                 replace_stats(content, 10)
+
+
+class CardTests(unittest.TestCase):
+    def test_cards_are_valid_accessible_svg_with_matching_counts(self):
+        ns = {"svg": "http://www.w3.org/2000/svg"}
+        for count in (0, 763, 123456):
+            for theme, background in (("light", "#ffffff"), ("dark", "#0d1117")):
+                with self.subTest(count=count, theme=theme):
+                    root = ET.fromstring(render_card(count, theme))
+                    self.assertEqual(root.attrib["viewBox"], "0 0 340 128")
+                    self.assertEqual(root.attrib["role"], "img")
+                    self.assertEqual(root.find("svg:desc", ns).text,
+                                     f"GitHub 全分支提交：{count:,} 次")
+                    self.assertEqual(root.find("svg:rect", ns).attrib["fill"], background)
+                    self.assertEqual(root.findall(".//svg:text", ns)[-1].text, f"{count:,}")
+                    self.assertIsNone(root.find(".//svg:script", ns))
 
 
 class TransportTests(unittest.TestCase):

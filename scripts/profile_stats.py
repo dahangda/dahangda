@@ -6,7 +6,7 @@ repositories. Match the GitHub account or owner-confirmed historical author
 emails; names alone are not sufficient. Reject conflicting account identities.
 Includes merge commits authored by the user; deduplicates SHAs globally. Excludes
 deleted branches, tags alone, local branches and company-hosted Git servers.
-Only aggregate counts are written to the README and workflow logs.
+Only aggregate counts are written to the README, SVG cards and workflow logs.
 Requires GitHub CLI; Actions supplies GH_TOKEN only to the collection step.
 """
 
@@ -160,12 +160,45 @@ def collect_repository(api, full_name, username, user_id, completed_heads):
     return commits, heads, branches
 
 
+def render_card(count, theme):
+    """Render the same compact card in GitHub's light and dark palettes."""
+    palette = {
+        "light": ("#ffffff", "#d1d9e0", "#0969da", "#59636e", "#1f2328"),
+        "dark": ("#0d1117", "#30363d", "#58a6ff", "#9198a1", "#f0f6fc"),
+    }
+    background, border, accent, label, number = palette[theme]
+    total = f"{count:,}"
+    font_size = min(40, 200 // len(total))
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="340" height="128" viewBox="0 0 340 128" role="img" aria-labelledby="title desc">
+<title id="title">GitHub Activity</title>
+<desc id="desc">GitHub 全分支提交：{total} 次</desc>
+<rect x="0.5" y="0.5" width="339" height="127" rx="8" fill="{background}" stroke="{border}"/>
+<g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+<text x="24" y="34" fill="{accent}" font-size="17" font-weight="600">GitHub Activity</text>
+<g transform="translate(24 76)" stroke="{accent}" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<circle cx="4" cy="2" r="2.5"/><circle cx="4" cy="16" r="2.5"/><circle cx="14" cy="3" r="2.5"/>
+<path d="M4 4.5v9M14 5.5v1c0 4-10 2-10 7"/>
+</g>
+<text x="50" y="90" fill="{label}" font-size="14" font-weight="500">全分支提交</text>
+<text x="316" y="99" text-anchor="end" fill="{number}" font-size="{font_size}" font-weight="650" letter-spacing="-1">{total}</text>
+</g>
+</svg>
+'''
+
+
 def replace_stats(content, count):
     if content.count(START) != 1 or content.count(END) != 1 or content.index(START) >= content.index(END):
         raise StatsError("README statistics markers are missing or invalid.")
     before, rest = content.split(START, 1)
     _, after = rest.split(END, 1)
-    section = f"\n**GitHub 全分支提交 · {count:,} 次**\n"
+    # Version the image URLs with the count so cached images cannot mask an update.
+    section = f'''
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./profile/commits-dark.svg?v={count}">
+  <source media="(prefers-color-scheme: light)" srcset="./profile/commits-light.svg?v={count}">
+  <img alt="GitHub 全分支提交 · {count:,} 次" src="./profile/commits-light.svg?v={count}" width="340" height="128">
+</picture>
+'''
     return before + START + section + END + after
 
 
@@ -174,11 +207,19 @@ def update(api, username, readme, dry_run=False):
     replace_stats(original, 0)  # Check markers before any API calls.
     result = collect(api, username)
     content = replace_stats(original, result["commits"])
+    cards = {theme: render_card(result["commits"], theme) for theme in ("light", "dark")}
     # A failed or interrupted scan never touches the previous published count.
-    if not dry_run and content != original:
+    if not dry_run:
         if readme.read_text(encoding="utf-8") != original:
             raise StatsError("README changed during collection; refusing to overwrite it.")
-        readme.write_text(content, encoding="utf-8")
+        directory = readme.parent / "profile"
+        directory.mkdir(exist_ok=True)
+        for theme, svg in cards.items():
+            path = directory / f"commits-{theme}.svg"
+            if not path.exists() or path.read_text(encoding="utf-8") != svg:
+                path.write_text(svg, encoding="utf-8")
+        if content != original:
+            readme.write_text(content, encoding="utf-8")
     return result
 
 
