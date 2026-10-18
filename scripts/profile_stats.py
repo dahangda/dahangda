@@ -2,10 +2,11 @@
 """Count an author's commits reachable from all accessible GitHub branch heads.
 
 Includes owned, collaborator and organization repositories, forks and private
-repositories. GitHub resolves author identity; names alone are not sufficient.
+repositories. Match the GitHub account or owner-confirmed historical author
+emails; names alone are not sufficient. Reject conflicting account identities.
 Includes merge commits authored by the user; deduplicates SHAs globally. Excludes
 deleted branches, tags alone, local branches and company-hosted Git servers.
-No repository names, commit messages, emails or hashes are published.
+Only aggregate counts are written to the README and workflow logs.
 Requires GitHub CLI; Actions supplies GH_TOKEN only to the collection step.
 """
 
@@ -19,6 +20,11 @@ from pathlib import Path
 START = "<!-- PROFILE-STATS:START -->"
 END = "<!-- PROFILE-STATS:END -->"
 SHA = re.compile(r"[0-9a-f]{40}")
+# Historical identities explicitly confirmed by the profile owner. Keep these
+# scoped to that account so --username cannot attribute them to another user.
+HISTORICAL_AUTHOR_EMAILS = {
+    "dahangda": ("yanhang@bobfintech.com.cn", "yanhang@291gmail.com"),
+}
 
 
 class StatsError(Exception):
@@ -126,6 +132,7 @@ def collect(api, username):
 def collect_repository(api, full_name, username, user_id, completed_heads):
     commits, heads = set(), set()
     branches = 0
+    emails = HISTORICAL_AUTHOR_EMAILS.get(username.casefold(), ())
     for branch in api.pages(f"repos/{full_name}/branches"):
         head = commit_sha((branch.get("commit") or {}).get("sha"))
         branches += 1
@@ -134,11 +141,22 @@ def collect_repository(api, full_name, username, user_id, completed_heads):
         if head in completed_heads or head in heads:
             continue
         heads.add(head)
-        for commit in api.pages(f"repos/{full_name}/commits", sha=head, author=username):
-            author = commit.get("author")
-            if not isinstance(author, dict) or author.get("id") != user_id:
-                raise StatsError("Author identity could not be verified; collection incomplete.")
-            commits.add(commit_sha(commit.get("sha")))
+        for identity in (username, *emails):
+            for commit in api.pages(f"repos/{full_name}/commits", sha=head, author=identity):
+                author = commit.get("author")
+                if identity == username:
+                    valid = isinstance(author, dict) and author.get("id") == user_id
+                else:
+                    # Inspect the raw author email, never the committer or name.
+                    email = ((commit.get("commit") or {}).get("author") or {}).get("email")
+                    valid = (isinstance(email, str) and email.casefold() == identity and
+                             (author is None or
+                              isinstance(author, dict) and author.get("id") == user_id))
+                if not valid:
+                    raise StatsError("Author identity could not be verified; collection incomplete.")
+                # Account and email queries can overlap, including after an email
+                # is linked to GitHub. Deduplicate across queries and repositories.
+                commits.add(commit_sha(commit.get("sha")))
     return commits, heads, branches
 
 

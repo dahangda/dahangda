@@ -5,7 +5,10 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from scripts.profile_stats import END, START, GitHub, HTTPError, StatsError, collect, replace_stats, update
+from scripts.profile_stats import (
+    END, START, HISTORICAL_AUTHOR_EMAILS, GitHub, HTTPError, StatsError,
+    collect, collect_repository, replace_stats, update,
+)
 
 
 def sha(number):
@@ -26,7 +29,10 @@ class FixtureAPI(GitHub):
         self.calls.append((endpoint, params))
         if endpoint == "user":
             return {"id": 7, "login": "dahangda"}
-        items = self.data[(endpoint, params.get("sha"))]
+        if params.get("author") in HISTORICAL_AUTHOR_EMAILS["dahangda"]:
+            items = self.data.get((endpoint, params.get("sha"), params["author"]), [])
+        else:
+            items = self.data[(endpoint, params.get("sha"))]
         if isinstance(items, Exception):
             raise items
         offset = (params["page"] - 1) * params["per_page"]
@@ -61,10 +67,59 @@ class CollectionTests(unittest.TestCase):
         api = fixture()
         self.assertEqual(collect(api, "dahangda"), {"commits": 4, "repositories": 4, "branches": 5, "unavailable_repositories": 0})
         requests = [(path, params) for path, params in api.calls if path.endswith("/commits")]
-        self.assertEqual(len(requests), 4)  # Shared fork tip reuses its history.
-        self.assertTrue(all(params["author"] == "dahangda" for _, params in requests))
+        self.assertEqual(len(requests), 12)  # Three identities; shared fork tip reuses history.
+        self.assertEqual({params["author"] for _, params in requests},
+                         {"dahangda", *HISTORICAL_AUTHOR_EMAILS["dahangda"]})
         self.assertIn(("repos/owner/public/commits", {"per_page": 100, "page": 1,
                        "sha": sha(11), "author": "dahangda"}), requests)
+
+    def test_historical_emails_include_unlinked_commits_and_deduplicate(self):
+        api = fixture()
+        company, old_email = HISTORICAL_AUTHOR_EMAILS["dahangda"]
+        def historical(number, email, linked=False):
+            return {"sha": sha(number), "author": {"id": 7} if linked else None,
+                    "commit": {"author": {"name": "mac", "email": email}}}
+        api.data[("repos/owner/public/commits", sha(11), company)] = [
+            historical(1, company, linked=True), historical(5, company)]
+        api.data[("repos/org/private/commits", sha(12), company)] = [historical(5, company)]
+        api.data[("repos/owner/fork/commits", sha(13), old_email)] = [historical(6, old_email)]
+        self.assertEqual(collect(api, "dahangda")["commits"], 6)
+
+    def test_historical_email_queries_paginate(self):
+        api = fixture()
+        email = HISTORICAL_AUTHOR_EMAILS["dahangda"][0]
+        api.data[("repos/org/private/commits", sha(12), email)] = [
+            {"sha": sha(n), "author": None, "commit": {"author": {"email": email}}}
+            for n in range(1000, 1101)]
+        self.assertEqual(collect(api, "dahangda")["commits"], 105)
+
+    def test_invalid_historical_identity_or_query_failure_preserves_readme(self):
+        email = HISTORICAL_AUTHOR_EMAILS["dahangda"][0]
+        bad_results = [
+            [{"sha": sha(5), "author": None}],
+            [{"sha": sha(5), "author": None, "commit": {
+                "author": {"name": "yanhang", "email": "someone@example.com"},
+                "committer": {"email": email}}}],
+            [{"sha": sha(5), "author": {"id": 8},
+              "commit": {"author": {"email": email}}}],
+            HTTPError(403),
+        ]
+        for result in bad_results:
+            with self.subTest(result=result), tempfile.TemporaryDirectory() as directory:
+                api = fixture()
+                api.data[("repos/org/private/commits", sha(12), email)] = result
+                readme = Path(directory) / "README.md"
+                original = START + "previous valid count" + END
+                readme.write_text(original)
+                with self.assertRaises(StatsError):
+                    update(api, "dahangda", readme)
+                self.assertEqual(readme.read_text(), original)
+
+    def test_historical_emails_are_not_used_for_another_account(self):
+        api = fixture()
+        collect_repository(api, "owner/public", "another-user", 7, set())
+        self.assertTrue(all(params["author"] == "another-user"
+                            for path, params in api.calls if path.endswith("/commits")))
 
     def test_pagination_for_repositories_branches_and_commits(self):
         repos = [{"id": n, "full_name": f"owner/repo{n}"} for n in range(101)]
