@@ -16,7 +16,7 @@ jobs:
   update:
     if: github.repository == 'dahangda/dahangda' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 45
     steps:
       - name: Check statistics token
         env:
@@ -28,11 +28,6 @@ jobs:
             echo '::error::Add the PROFILE_STATS_TOKEN repository secret (classic PAT: repo and read:user).'
             exit 1
           fi
-          token_owner=$(gh api user --jq '.login')
-          if [[ "$token_owner" != 'dahangda' ]]; then
-            echo '::error::PROFILE_STATS_TOKEN must belong to dahangda.'
-            exit 1
-          fi
 
       - name: Check out profile
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -40,54 +35,24 @@ jobs:
           ref: master
           token: ${{ github.token }}
 
-      - name: Generate public and private statistics
-        uses: stats-organization/github-readme-stats-action@2c498845f71017821efaad14293ebc736156ef21 # v2
-        with:
-          card: stats
-          core_version: '2.2.1'
-          options: username=dahangda&show_icons=true&theme=transparent&include_all_commits=true&hide_rank=true&hide=stars,issues,prs,contribs&show=contributions&number_format=long&custom_title=GitHub%20Activity&disable_animations=true
-          path: profile/stats.svg
-          token: ${{ secrets.PROFILE_STATS_TOKEN }}
-          fail_on_error: 'true'
+      - name: Test statistics collection
+        run: python3 -m unittest discover -s tests -v
 
-      - name: Validate card and update README
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
-          import xml.etree.ElementTree as ET
-
-          svg = ET.parse('profile/stats.svg').getroot()
-          text = ' '.join(svg.itertext())
-          if svg.tag != '{http://www.w3.org/2000/svg}svg' or 'Total Commits' not in text or 'Something went wrong' in text:
-              raise SystemExit('Invalid statistics card; previous published card is preserved.')
-
-          path = Path('README.md')
-          content = path.read_text()
-          start, end = '<!-- PROFILE-STATS:START -->', '<!-- PROFILE-STATS:END -->'
-          if content.count(start) != 1 or content.count(end) != 1 or content.index(start) >= content.index(end):
-              raise SystemExit('README statistics markers are missing or invalid.')
-          replacement = '''
-          [![Hang Yan's GitHub activity](./profile/stats.svg)](https://github.com/dahangda)
-
-          <sub>公开仓库数包含 Fork；Commits 为当前授权范围内、GitHub 可检索到的历史提交数，包含可访问的私有仓库。Contributions 为历史贡献次数，与 commit 数口径不同。由 GitHub Actions 每日更新；权限、分支与索引状态可能影响统计范围。</sub>
-          '''
-          before, rest = content.split(start, 1)
-          _, after = rest.split(end, 1)
-          path.write_text(before + start + '\n' + replacement.strip() + '\n' + end + after)
-          PY
+      - name: Count commits across all accessible branches
+        env:
+          GH_TOKEN: ${{ secrets.PROFILE_STATS_TOKEN }}
+        run: python3 scripts/profile_stats.py
 
       - name: Commit updated statistics
         shell: bash
         run: |
           set -euo pipefail
-          git add -- README.md profile/stats.svg
+          git add -- README.md
           if git diff --cached --quiet; then
             echo 'Statistics unchanged.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m '📊 chore(profile): 更新 GitHub 贡献统计'
+          git commit -m '📊 chore(profile): 更新 GitHub 全分支提交统计'
           git push origin HEAD:master

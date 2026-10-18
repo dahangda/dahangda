@@ -30,7 +30,5 @@ iOS 开发者 · 郑州大学计算机科学学士
 ## GitHub activity
 
 <!-- PROFILE-STATS:START -->
-[![Hang Yan's GitHub activity](./profile/stats.svg)](https://github.com/dahangda)
-
-<sub>公开仓库数包含 Fork；Commits 为当前授权范围内、GitHub 可检索到的历史提交数，包含可访问的私有仓库。Contributions 为历史贡献次数，与 commit 数口径不同。由 GitHub Actions 每日更新；权限、分支与索引状态可能影响统计范围。</sub>
+**GitHub 全分支提交 · 待统计**
 <!-- PROFILE-STATS:END -->
