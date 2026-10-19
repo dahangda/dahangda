@@ -2,7 +2,7 @@ name: Update profile stats
 
 on:
   schedule:
-    - cron: '23 0 * * *' # 08:23 Asia/Taipei; GitHub may delay scheduled runs.
+    - cron: '23 */6 * * *' # 02:23, 08:23, 14:23, 20:23 Asia/Taipei; GitHub may delay runs.
   workflow_dispatch:
 
 permissions:
