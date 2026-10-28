@@ -31,8 +31,8 @@ iOS 开发者 · 郑州大学计算机科学学士
 
 <!-- PROFILE-STATS:START -->
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./profile/commits-dark.svg?v=913">
-  <source media="(prefers-color-scheme: light)" srcset="./profile/commits-light.svg?v=913">
-  <img alt="GitHub 全分支提交 · 913 次" src="./profile/commits-light.svg?v=913" width="340" height="128">
+  <source media="(prefers-color-scheme: dark)" srcset="./profile/commits-dark.svg?v=917">
+  <source media="(prefers-color-scheme: light)" srcset="./profile/commits-light.svg?v=917">
+  <img alt="GitHub 全分支提交 · 917 次" src="./profile/commits-light.svg?v=917" width="340" height="128">
 </picture>
 <!-- PROFILE-STATS:END -->
